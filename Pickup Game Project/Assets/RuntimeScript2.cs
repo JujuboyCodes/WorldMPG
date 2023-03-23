@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -11,13 +12,17 @@ namespace ReadyPlayerMe
 {
     public class RuntimeScript2 : MonoBehaviour
     {
-        
+        public GameObject CountdownCanvas;
+        public GameObject LoadingUi;
+
+        public Slider ProgressBar;
+
         #region Main Settings
         [Space]
         [Header("Base Settings")]
         [Space]
         [Tooltip("Starter Asset basemodel you can change to other model too")]
-        [SerializeField]private string avatarUrl;
+       // [SerializeField]private string avatarUrl;
         public bool loadOnStart;
         [Space]
         public GameObject baseModel;
@@ -51,7 +56,7 @@ namespace ReadyPlayerMe
         [Header("UI Message")]
         [Space]
         public string loadAvatarText = "Load Ready Player Me avatar. Please wait...";
-        public string loadErrorText = "Timeout after 2000ms, avatar failed to load. Please try again";
+        public string loadErrorText =   "Couldn't load your avatar. Please check your internet connection"; //"Timeout after 2000ms, avatar failed to load. Please try again";
         public string urlErrorText = "Given url is invalid or is not Ready Player Me avatar. Please check again";
         public float timeToShowErrorMessage = 3f;
         #endregion
@@ -124,10 +129,13 @@ namespace ReadyPlayerMe
             ApplicationData.Log();
 
             GameObject.FindGameObjectWithTag(CAMERA).GetComponent<CinemachineVirtualCamera>().Follow = playerCameraRoot;
-              string oldUrl = PlayerPrefs.GetString("avatar_url",""); //
-             string avatarUrl = "https://api.readyplayer.me/v1/avatars/63b361e9d16b67196c5c6ec9.glb";
-     
-
+              
+             // string oldUrl = PlayerPrefs.GetString("avatar_url","");
+              string oldUrl = "https://models.readyplayer.me/63b361e9d16b67196c5c6ec9.glb";
+              string avatarUrl = oldUrl.Replace("models", "api").Replace(".me/", ".me/v1/avatars/");
+            // string avatarUrl = "https://api.readyplayer.me/v1/avatars/63b361e9d16b67196c5c6ec9.glb";
+            Debug.Log(oldUrl);
+      
             if (enableDebugLog)
             {
                 if (DebugLog == null)
@@ -148,6 +156,8 @@ namespace ReadyPlayerMe
                 if (avatarUrl == null || !checkURL)
                 {
                     UrlError(avatarUrl);
+                 // Calling Loadscene to return to Home Scene if Urlha Errors
+                    StartCoroutine(LoadHomeScene());
                 }
                 else
                 {
@@ -159,6 +169,7 @@ namespace ReadyPlayerMe
                 avatarSelection = true;
                 AvatarSelection();
             }
+
         }
         private void OnDestroy()
         {
@@ -186,9 +197,10 @@ namespace ReadyPlayerMe
         public void UILoadAvatar()
         {
             // Referencing avatarUrl Again (Delete if not needed)
-           // string oldUrl = PlayerPrefs.GetString("avatar_url","");
-            //string avatarUrl = oldUrl.Replace("models", "api").Replace(".me/", ".me/v1/avatars/");
-
+            string oldUrl = PlayerPrefs.GetString("avatar_url","");
+            string avatarUrl = oldUrl.Replace("models", "api").Replace(".me/", ".me/v1/avatars/");
+          // string avatarUrl = "https://api.readyplayer.me/v1/avatars/63b361e9d16b67196c5c6ec9.glb";
+     
           
             string RPMInputFieldText = RPMChangeAvatarUI.GetComponentInChildren<InputField>().text;
             bool checkURL = RPMInputFieldText.Contains(".glb");
@@ -205,6 +217,15 @@ namespace ReadyPlayerMe
         public void LoadAvatar(string avatarUrls)
         {
             var avatarLoader = new AvatarLoader();
+
+             avatarLoader.OnProgressChanged += (_, args) =>
+            {
+            if (args.Operation == nameof(AvatarLoader))
+              {
+                ProgressBar.value = args.Progress;
+              }
+            };
+
             avatarLoader.OnCompleted += (_, args) =>
             {
                 avatar = args.Avatar;
@@ -234,6 +255,11 @@ namespace ReadyPlayerMe
                 {
                     eventToCallOnLoadCompleted.Invoke();
                 }
+                
+                // Setting CounDownCanvas Inactive once the Avatar is loaded
+                ProgressBar.value = 1;
+                // Start Game Coroutine
+                StartCoroutine(StartGame());
 
                 RPMLoadAvatarUI.SetActive(false);
                 avatarSelection = false;
@@ -242,6 +268,7 @@ namespace ReadyPlayerMe
             };
             avatarLoader.OnFailed += (_, args) =>
             {
+                
                 RPMLoadAvatarUI.SetActive(false);
 
                 if (usingEvent)
@@ -253,7 +280,11 @@ namespace ReadyPlayerMe
                 {
                     SDKLogger.Log(tag, loadErrorText);
                 }
-
+                
+               
+                // Calling Loadscene to return to Home Scene if Urlha Errors
+                StartCoroutine(LoadHomeScene());
+                
 
                 StartCoroutine(ErrorShow(loadErrorText));
                 RPMChangeAvatarUI.SetActive(true);
@@ -269,7 +300,19 @@ namespace ReadyPlayerMe
 
             RPMChangeAvatarUI.SetActive(false);
             RPMLoadAvatarUI.SetActive(true);
+
+           
         }
+
+        // Coroutine to call Once Avatar is loaded
+        private IEnumerator StartGame()
+        {
+             yield return new WaitForSeconds(2); // Wait for 2 
+            LoadingUi.SetActive(false);
+            CountdownCanvas.SetActive(true);
+        }
+
+
         private void UrlError(String ErrorField)
         {
             if (usingEvent)
@@ -278,6 +321,7 @@ namespace ReadyPlayerMe
             }
 
             StartCoroutine(ErrorShow(urlErrorText));
+            
 
             if (enableDebugLog)
             {
@@ -288,6 +332,9 @@ namespace ReadyPlayerMe
                 avatarSelection = true;
                 AvatarSelection();
             }
+
+            
+
         }
         private IEnumerator ErrorShow(string errorMessage)
         {
@@ -295,8 +342,16 @@ namespace ReadyPlayerMe
             RPMErrorUI.SetActive(true);
             yield return new WaitForSeconds(timeToShowErrorMessage);
             RPMErrorUI.SetActive(false);
-        }
+            
+        } 
         #endregion
+         
+        public IEnumerator LoadHomeScene()
+        {
+             yield return new WaitForSeconds(5); // Wait for 5 seconds
+             SceneManager.LoadScene("HomeScene"); // Load the HomeScene
+        }
+   
 
         #region Avatar Renderer
         private void StartLoadAvatarRenderer(string _loadAvatarRenderer)
@@ -338,7 +393,7 @@ namespace ReadyPlayerMe
                 avatarUIPanel.sprite = sprite;
                 avatarUIPanel.material.mainTexture = spriteRenderer.sharedMaterial.mainTexture;
 
-                
+
                 // Set the alpha of the avatarUIPanel's color to 255 (fully opaque)
                 Color panelColor = avatarUIPanel.color;
                 

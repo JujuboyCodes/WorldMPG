@@ -170,4 +170,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cc42532d94001c4ea25d1f23ac638eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickupTag: PickUp
+  playerScore: {fileID: 3034815715753922466, guid: af67bd4a7396e1640ba6121158946d49,
+    type: 3}
+  PlayerData: {fileID: 11400000, guid: 6385da893f6c83546891bc8d9fad2346, type: 2}

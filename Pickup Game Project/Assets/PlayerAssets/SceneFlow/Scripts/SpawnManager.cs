@@ -24,12 +24,12 @@ public class SpawnManager : MonoBehaviour
 
            if (GameObject.FindGameObjectWithTag(pickupTag) != null)
             {
-                Debug.Log("Found PickUp Something");
+               // Debug.Log("Found PickUp Something");
             }
         // If all items have been destroyed, start respawning them
         if (GameObject.FindGameObjectWithTag(pickupTag) == null)
         {
-            Debug.Log("All PickUps Used");
+           // Debug.Log("All PickUps Used");
             StartCoroutine(RespawnItems());
         }
     }

@@ -8,7 +8,9 @@ namespace ReadyPlayerMe
 public class StringDelete : MonoBehaviour
 {
   public TMP_Text UserUrl;
-    public TMP_Text UserUrl1;
+    public TMP_Text v1Url;
+    public TMP_Text convertedUrl ;
+
   string myString = "Hello World!";
   public GameObject Canvas;
   private GameObject avatar;
@@ -16,9 +18,12 @@ public class StringDelete : MonoBehaviour
 void Start() {
     UserUrl.text = myString;
 
-    UserUrl1.text = PlayerPrefs.GetString("avatar_url", "");
-     string avatarUrl = PlayerPrefs.GetString("avatar_url", "");
-      
+    //string oldUrl = PlayerPrefs.GetString("avatar_url","");
+     string oldUrl = "https://models.readyplayer.me/63c45504e5b9a43558816c73.glb";
+     string avatarUrl = oldUrl.Replace("models", "api").Replace(".me/", ".me/v1/avatars/");
+      v1Url.text = oldUrl;
+      convertedUrl.text = avatarUrl;
+
       if (avatarUrl == "")
         {
           Debug.Log("avatar_url not found in PlayerPrefs");
@@ -31,18 +36,11 @@ void Start() {
           var avatarLoader = new AvatarLoader();
           avatarLoader.OnCompleted += (_, args) =>
         {
-          avatar = args.Avatar;
-          //  AvatarAnimatorHelper.SetupAnimator(args.Metadata.BodyType, avatar);
+         // avatar = args.Avatar;
+           // AvatarAnimatorHelper.SetupAnimator(args.Metadata.BodyType, avatar);
         };
-          avatarLoader.LoadAvatar(avatarUrl);
+          // avatarLoader.LoadAvatar(avatarUrl);
         }
-
-       // private void OnDestroy()
-        //{
-           // if (avatar != null) Destroy(avatar);
-     //   }    }
-
-
 
 
     // Update is called once per frame
