@@ -56,5 +56,10 @@ public class StartConnection : MonoBehaviour
         yield return new WaitForSeconds(2);
         WelcomeMessage.SetActive(false);
     }
+
+    public void CheckTokenBalance()
+    {
+        
+    }
 }
 

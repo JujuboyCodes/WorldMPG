@@ -67,7 +67,7 @@ public class GameStateController : MonoBehaviour
     // Function to toggle the pause state
     public void TogglePauseState()
     {
-        // If the current state is "Pause", switch to the previous state
+        // If the current state is "Pause", switch to the previous state & Play all Audio
         if (currentState == GameState.Pause)
         {
             switch (prevState)
@@ -79,12 +79,32 @@ public class GameStateController : MonoBehaviour
                     SetState(GameState.GameOver);
                     break;
             }
+
+                // Find all AudioSources in the scene
+                AudioSource[] audioSources = FindObjectsOfType<AudioSource>();
+
+                // Play each AudioSource
+                foreach (AudioSource audioSource in audioSources)
+                {
+                audioSource.Play();
+                }
+
         }
-        // If the current state is not "Pause", switch to the "Pause" state
+        // If the current state is not "Pause", switch to the "Pause" state & Pause all Audio
         else
         {
             prevState = currentState;
             SetState(GameState.Pause);
+
+            // Find all AudioSources in the scene
+            AudioSource[] audioSources = FindObjectsOfType<AudioSource>();
+
+            // Pause each AudioSource
+            foreach (AudioSource audioSource in audioSources)
+            {
+            audioSource.Pause();
+            }
+
         }
     }
 

@@ -20,4 +20,6 @@ public class PickupCount : MonoBehaviour
         // Update the score UI text to match the score value in the ScoreData asset
         playerScore.text = "Score: " + playerData.Playerscore;
     }
+
+    
 }

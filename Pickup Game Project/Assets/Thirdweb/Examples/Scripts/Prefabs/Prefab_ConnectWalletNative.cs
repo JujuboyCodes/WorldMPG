@@ -8,6 +8,7 @@ using UnityEngine.Events;
 using WalletConnectSharp.Core.Models;
 using WalletConnectSharp.Unity;
 
+
 public enum WalletNative
 {
     DeviceWallet,
@@ -69,6 +70,8 @@ public class Prefab_ConnectWalletNative : MonoBehaviour
     bool connecting;
     WCSessionData wcSessionData;
 
+    public GameObject Copied;
+    
     // UI Initialization
 
     private void Start()
@@ -220,8 +223,10 @@ public class Prefab_ConnectWalletNative : MonoBehaviour
 
     public void OnCopyAddress()
     {
+        Copied.SetActive(true);
         GUIUtility.systemCopyBuffer = address;
         Debugger.Instance.Log("Copied your address to your clipboard!", $"Address: {address}");
+        
     }
 
     public void OnExportWallet()

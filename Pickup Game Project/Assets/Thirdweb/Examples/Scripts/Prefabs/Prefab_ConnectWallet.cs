@@ -5,7 +5,6 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 
 public enum Wallet
 {
@@ -37,11 +36,6 @@ public class Prefab_ConnectWallet : MonoBehaviour
     public List<Wallet> supportedWallets;
     public bool supportSwitchingNetwork;
     public List<Chain> supportedNetworks;
-
-    [Header("Connection States")]
-    public GameObject ConnectedState;
-    public GameObject DisconnectedState;
-    public GameObject WalletconnectCanvas;
 
     [Header("CUSTOM CALLBACKS")]
     public UnityEvent OnConnectedCallback;
@@ -110,9 +104,6 @@ public class Prefab_ConnectWallet : MonoBehaviour
 
         networkSwitchButton.SetActive(supportSwitchingNetwork);
         networkDropdown.SetActive(false);
-
-        ConnectedState.SetActive(false);
-        DisconnectedState.SetActive(true);
     }
 
     // Connecting
@@ -127,13 +118,6 @@ public class Prefab_ConnectWallet : MonoBehaviour
             OnConnected();
             OnConnectedCallback?.Invoke();
             print($"Connected successfully to: {address}");
-
-            // Resetting Message to Show Connected Message
-            WalletconnectCanvas.GetComponent<StartConnection>().SwitchToConnectedState(ConnectedState, DisconnectedState);
-
-            // Switching scenes to Game Scene
-            
-            WalletconnectCanvas.GetComponent<StartConnection>().LoadNextScene();
         }
         catch (Exception e)
         {
@@ -176,9 +160,6 @@ public class Prefab_ConnectWallet : MonoBehaviour
             OnDisconnected();
             OnDisconnectedCallback?.Invoke();
             print($"Disconnected successfully.");
-
-            // Resetting Message to Show Disconnected Message
-            WalletconnectCanvas.GetComponent<StartConnection>().SwitchToDisconnectedState(ConnectedState,DisconnectedState);
         }
         catch (Exception e)
         {

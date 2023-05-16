@@ -11,7 +11,7 @@ using Cinemachine;
 namespace ReadyPlayerMe
 {
     public class RuntimeScript2 : MonoBehaviour
-    {
+    {  
         public GameObject CountdownCanvas;
         public GameObject LoadingUi;
 
@@ -130,11 +130,11 @@ namespace ReadyPlayerMe
 
             GameObject.FindGameObjectWithTag(CAMERA).GetComponent<CinemachineVirtualCamera>().Follow = playerCameraRoot;
               
-             // string oldUrl = PlayerPrefs.GetString("avatar_url","");
-              string oldUrl = "https://models.readyplayer.me/63b361e9d16b67196c5c6ec9.glb";
-              string avatarUrl = oldUrl.Replace("models", "api").Replace(".me/", ".me/v1/avatars/");
+              string oldUrl = PlayerPrefs.GetString("avatar_url","");  // get userrpm url from Prefs
+             // string oldUrl = "https://models.readyplayer.me/63b361e9d16b67196c5c6ec9.glb";
+              string avatarUrl = oldUrl.Replace("models", "api").Replace(".me/", ".me/v1/avatars/");  // convert rpm url to downloadable link
             // string avatarUrl = "https://api.readyplayer.me/v1/avatars/63b361e9d16b67196c5c6ec9.glb";
-            Debug.Log(oldUrl);
+                Debug.Log(oldUrl);
       
             if (enableDebugLog)
             {
@@ -156,7 +156,7 @@ namespace ReadyPlayerMe
                 if (avatarUrl == null || !checkURL)
                 {
                     UrlError(avatarUrl);
-                 // Calling Loadscene to return to Home Scene if Urlha Errors
+                   // Calling Loadscene to return to Home Scene if Url has Errors
                     StartCoroutine(LoadHomeScene());
                 }
                 else
@@ -282,8 +282,8 @@ namespace ReadyPlayerMe
                 }
                 
                
-                // Calling Loadscene to return to Home Scene if Urlha Errors
-                StartCoroutine(LoadHomeScene());
+                  // Calling Loadscene to return to Home Scene if Url has Errors
+                   StartCoroutine(LoadHomeScene());
                 
 
                 StartCoroutine(ErrorShow(loadErrorText));

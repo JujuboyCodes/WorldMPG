@@ -68,19 +68,13 @@ MonoBehaviour:
       elementIcon: {fileID: 0}
     reqReferences: {fileID: 0}
     isExpanded: 1
-    _keyValues: 08000000090000000000000001000000
-    _keys: 08000000090000000000000001000000
+    _keyValues: 0800000009000000
+    _keys: 0800000009000000
     _values:
-    - identifier: ethereum
-      chainId: 1
-      rpcOverride: 
-    - identifier: goerli
-      chainId: 5
-      rpcOverride: 
-    - identifier: optimism
+    - identifier: optimism-goerli
       chainId: 10
       rpcOverride: 
-    - identifier: optimism
-      chainId: 10
+    - identifier: optimism-goerli
+      chainId: 420
       rpcOverride: 
   storageIpfsGatewayUrl: https://gateway.ipfscdn.io/ipfs/
